@@ -107,14 +107,27 @@ class Lturtle:
                 eval(command)
     
         if self.edges and self.verts:
-            mesh = bpy.data.meshes.new("Base_Data")
-            mesh.from_pydata(self.verts, self.edges, [])
-            mesh.update()
-
-            obj = bpy.data.objects.new("Base_Object", mesh)
-
-            scene = bpy.context.scene
-            scene.objects.link(obj)
+            
+            meshes = bpy.data.meshes
+            objects = bpy.data.objects
+            
+            if ('Base_Data' in meshes) and ('Base_Object' in objects):
+                mesh = meshes.get('Base_Data')
+                obj = objects.get('Base_Object')
+                bm = bmesh.new()
+                bm.from_mesh(mesh)
+                bm.clear()
+                bm.to_mesh(mesh)
+                bm.free()
+                mesh.from_pydata(self.verts, self.edges, [])
+                mesh.update()
+            else:
+                mesh = bpy.data.meshes.new("Base_Data")
+                mesh.from_pydata(self.verts, self.edges, [])
+                mesh.update()
+                obj = bpy.data.objects.new("Base_Object", mesh)
+                scene = bpy.context.scene
+                scene.objects.link(obj)
 
     def add_edge(self):
         i = len(self.verts)
@@ -225,11 +238,11 @@ class Lturtle:
 
 
 rules = {}
-rules['I'] = '+(40)ffHccI'
-rules['H'] = '[+FfFG]c[-FFFG]c[^FfFG]c[&FFfG]G'
-rules['G'] = 'Z[dS]e+ZF[d]e[d]e[d]'
-rules['e'] = '+(90)F-(90)>(-45)'
-rules['d'] = '[F+(90)F+(90)F+(90)f>(+38)Z-(105)FF-(151)Ff][F&(38)+(15)F+(151)F]'
+rules['I'] = '+IFFFG'
+rules['H'] = '[+FFFZFG]c[FFFFFeFFFG]c[^F]c[&FFFFFFG]G'
+rules['G'] = 'Z[dS]e+F[d]e[d]'
+rules['e'] = '+(80)FFFFFF-(20)>(25)'
+rules['d'] = '[F+(-210)F+(90)F+(30)>(98)Z-(315)FF-(151)Ff][F&(38)+(15)F+(151)F]'
 axiom = 'I'
 m = iterate(7, axiom, rules)
 
