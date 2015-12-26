@@ -57,6 +57,7 @@ class Lturtle:
         self.vHeading = Vector((0, 0, 1))
         self.vPos = vPos
         self.delta = 0.2
+        self.amp = 1.0
 
     def chomp(self, instructions):
 
@@ -139,7 +140,7 @@ class Lturtle:
         if n:
             self.delta = float(n)
         components = [0, 0, 0]
-        components[axis] = sign * radians(self.delta)
+        components[axis] = sign * radians(self.delta) * self.amp
         myEul = Euler(components, 'XYZ')
         self.vHeading.rotate(myEul)
 
@@ -237,6 +238,7 @@ def sv_main(t_angle=0.2):
     poonjab = Lturtle()
     poonjab.verts = []
     poonjab.edges = []
+    poonjab.amp = t_angle
     poonjab.chomp(m)
     
     verts_out.extend(poonjab.verts)
