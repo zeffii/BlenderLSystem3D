@@ -1,4 +1,10 @@
 """
+
+-- this file does not work -- it isn't a standalone version of the script
+-- it is only a shell with most of the scriptnode code dumped and simply named init.py
+-- if you want to use the lsystem please view the directory and load the scripted node.
+
+
 lifted from: http://www.4dsolutions.net/ocn/lsystems.html
 """
 
