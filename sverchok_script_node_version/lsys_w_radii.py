@@ -9,7 +9,12 @@ import mathutils
 from mathutils import Vector, Euler
 
 """
-lifted from: http://www.4dsolutions.net/ocn/lsystems.html
+partially lifted from: http://www.4dsolutions.net/ocn/lsystems.html
+
+This mentions radii, and their intended use is to create a skin mesh with verts + edges + radii for skin modifier.
+
+This current implementation of this file does not yet support 's, {, or }` 
+
 """
 
 
@@ -53,9 +58,11 @@ class Lturtle:
     }
 
     stored_states = []
+    stored_radius = []
     radii = []
     verts = []
     edges = []
+    start_scale = 1.0
 
     def __init__(self, vPos=Vector((0, 0, 0))):
         self.vHeading = Vector((0, 0, 1))
@@ -65,6 +72,8 @@ class Lturtle:
         self.scale = 1.0
 
     def chomp(self, instructions):
+
+        self.scale *= self.start_scale
 
         getparam = 0
         checkparam = 0
@@ -109,6 +118,7 @@ class Lturtle:
         self.verts.append(self.vPos[:])
         self.vPos = self.vPos + (self.vHeading * self.length * amp)
         self.verts.append(self.vPos[:])
+        self.radii.extend([self.thickness, self.thickness])
 
     def fnodraw(self, n=""):
         self.vPos = self.vPos + self.vHeading * self.length
@@ -209,14 +219,15 @@ class Lturtle:
         print("Not handled %s" % n)
     
     def scale(self, n=""):
-        self.
-        ...
+        if n:
+            self.thickness *= n
 
     def store_scale(self, n=""):
-        ...                
+        self.stored_radius.append(self.thickness)
 
     def restore_scale(self, n=""):
-        ...
+        self.thickness = self.stored_radius.pop()
+
 
 def sv_main(t_angle=0.2, t_scale=0.4):
     verts_out = []
